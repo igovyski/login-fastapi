@@ -28,12 +28,12 @@ def signup(usuario: schemas.Usuario, db: Session = Depends(get_db)):
     usuario_criado = RepositorioUsuario(db).criar(usuario)
     return usuario_criado
 
-@router.get('/token', response_model=List[schemas.Usuario], status_code=status.HTTP_200_OK)
+@router.post('/token', status_code=status.HTTP_200_OK)
 def login(login_data: schemas.LoginData, db: Session = Depends(get_db)):
     email = login_data.email
     senha = login_data.senha
 
-    usuario = RepositorioUsuario(db).obter_por_telefone(email)
+    usuario = RepositorioUsuario(db).obter_por_email(email)
 
     if not usuario:
         raise HTTPException(
@@ -50,7 +50,7 @@ def login(login_data: schemas.LoginData, db: Session = Depends(get_db)):
         )
 
     # Gerar Token JWT
-    token = token_provider.criar_access_token({'sub': usuario.telefone})
+    token = token_provider.criar_access_token({'sub': usuario.email})
 
     return schemas.LoginSucesso(usuario=usuario, access_token=token)
 

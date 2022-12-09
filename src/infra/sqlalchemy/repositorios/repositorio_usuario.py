@@ -27,7 +27,7 @@ class RepositorioUsuario():
 
         return usuarios
 
-    def obter_por_email(self, email: str):
+    def obter_por_email(self, email) -> models.Usuario:
         stmt = select(models.Usuario) \
             .where(models.Usuario.email == email)
 
